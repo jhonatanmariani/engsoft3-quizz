@@ -1,0 +1,158 @@
+<div class="row">
+    <div class="card">
+        <div class="card-header">Adicionar Sorteio</div>
+        <div class="card-body">
+            <div class="modal-body no-padding">
+                <div class="row">
+                    <div class="col-12">
+
+                        <form id="searchForm" name="searchForm">
+
+                            <div class="form-row">
+
+                                <div class="col-md-3">
+                                    <label for="howMuch">Quantos números?</label>
+                                    <select id="howMuch" name="howMuch" onchange="generateHtml()" class="form-control">
+                                        <option value="">Selecione...</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                    </select>
+                                </div>
+                                <div class="form-row" id="search"></div>
+                            </div>
+                            <div class="float-right">
+                                <button class="btn btn-info" type="submit">Pesquisar</button>
+                            </div>
+                    </div>
+
+                    </form>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <table id="drawTable" name="drawTable" class="table table-striped table-bordered">
+                            <thead>
+                            <th>Número</th>
+                            <th class="text-center">Sorteio</th>
+                            <th class="text-center">Ações</th>
+                            </thead>
+                            <tbody style="font-size: 22px"></tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <div class="footer">
+                            <div id="message" class="alert alert-danger d-none">teste</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function generateHtml() {
+        var num = $("#howMuch").val();
+        var html = '';
+
+        for (var i = 0; i < num; i++) {
+            html += `   <div class="col-md-1 float-left">
+                            <label>Nº${i + 1}</label>
+                            <input type="text" data-mask="00" class="form-control" id="${i}" name="${i}">
+                        </div>
+            `;
+        }
+
+        document.getElementById('search').innerHTML = html;
+        JQuery.applyDataMask();
+    }
+
+    var message = document.getElementById('message');
+    var form = document.getElementById('searchForm');
+
+    function changeMessageType(type) {
+        if (type === 'ok') {
+            message.classList.remove('alert-danger');
+            message.classList.remove('d-none');
+            message.classList.add('alert-info');
+        }
+
+        if (type === 'error') {
+            message.classList.remove('alert-info');
+            message.classList.remove('d-none');
+            message.classList.add('alert-danger');
+        }
+    }
+
+    function generateTableBody(json) {
+        return `
+            <tr>
+                <td>${json.id}</td>
+                <td class="text-center">${json.draw}</td>
+            </tr>
+        `;
+    }
+
+    function getDraws() {
+        showLoading();
+        fetch(`<?= BASEURL ?>mostrar-sorteios`, {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            response.json().then(json => {
+                closeLoading();
+                let draws = json.message;
+                let drawsHtml = draws.map(generateTableBody);
+                $("#drawTable tbody").append(drawsHtml);
+            });
+        });
+    }
+
+    var draws;
+    var number;
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        showLoading();
+        number = $("#search").val();
+        fetch(`<?= BASEURL ?>pesquisar/` + number, {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            response.json().then(json => {
+                closeLoading();
+                draws = json.message;
+                let str = draws.map(generateTableBody);
+                alert(draws);
+                $("#drawTable").empty();
+                $("#drawTable").append(str);
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        getDraws();
+    })
+</script>

@@ -1,0 +1,235 @@
+#navbarDropdownMenuLink:hover, #navbarDropdownMenuLink:active, #navbarDropdownMenuLink:focus,
+footer a, footer a:hover {
+    color: #1A1F33 !important;
+    text-decoration: none;
+}
+
+.text-primary {
+    color: #1A1F33 !important;
+}
+
+.title {
+    font-weight: bold !important;
+}
+
+.border-my-td tr td    {
+    border: 1px solid lightgray;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+
+/* -------------------- Dashboard -------------------- */
+
+button.dashboard-module,
+button.dashboard-module:visited {
+    background-color: whitesmoke;
+    width: 102px;
+    height: 115px;
+    display: block;
+    float: left;
+    margin: 0 8px 8px 0;
+    text-align: center;
+    color: #444444;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+button.dashboard-module:hover,
+button.dashboard-module:active {
+    border-radius: 5px;
+    font-size: 12px;
+    float: left;
+    margin: 0 8px 8px 0;
+    text-align: center;
+    display: block;
+    width: 102px;
+    height: 115px;
+    color: #0b2e13;
+}
+
+.subMenuContractButton {
+    background-color: darkgray;
+    width: 102px;
+    height: 115px;
+    display: block;
+    float: left;
+    margin: 0 8px 8px 0;
+    text-align: center;
+    color: #444444;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+button.subMenuContractButton span {
+    margin-top: 10px;
+    display: block;
+}
+
+button.dashboard-module i {
+    margin-top: 5px;
+}
+
+button.dashboard-module span {
+    margin-top: 10px;
+    display: block;
+}
+
+button.colorme:hover td {
+    background-color: #a3e6bd !important;
+}
+
+body {
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+hr {
+    background-color: #FF6B00;
+}
+
+.subMenuActive {
+    background-color: #99ff99;
+}
+
+    table td {
+        /*text-align: center;*/
+        font-size: 0.9em;
+    }
+
+    table thead th{
+        font-size: 1.0em !important;
+    }
+
+    .no-padding {
+        padding: 0 0 0 0;
+    }
+
+@media only screen and (max-width: 800px) {
+    table table, table thead, table tbody, table th, table td, table tr {
+        display: block;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    table tr {
+        border: 1px solid #ccc;
+    }
+
+    table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        white-space: normal;
+        text-align: center;
+    }
+
+    table td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    table td:before {
+        content: attr(data-title);
+    }
+}
+
+.card-header {
+    background-color: #1A1F33 !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.text-yellow {
+    color: #FDC908 !important;
+}
+
+.btn-primary {
+    background-color: #1A2948;
+    font-weight: bold;
+}
+
+.btn-secondary {
+    background-color: #F17021;
+    font-weight: bold;
+}
+
+.bg-secondary {
+    background-color: #F17021 !important;
+    border: 1px solid #F17021 !important;
+}
+
+.bg-primary {
+    background-color: #1A1F33 !important;
+    border: 1px solid #1A1F33 !important;
+}
+
+.text-secondary {
+    color: #F17021 !important;
+}
+
+.text-primary {
+    color: #1A1F33 !important;
+}
+
+.orange-grid {
+    background: #F17021;
+    background-image: linear-gradient(#EF5A23 1px, transparent 1px), linear-gradient(90deg, #EF5A23 1px, transparent 1px);
+    background-size: 2em 2em;
+}
+
+.blue-grid {
+    background: #1A2948;
+    background-image: linear-gradient(#27526E 1px, transparent 1px), linear-gradient(90deg, #27526E 1px, transparent 1px);
+    background-size: 2em 2em;
+}
+
+.small-line{
+    line-height:0.1;
+}
+
+.loading{
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%,-50%) !important;
+}
+
+.loader{
+    position: relative;
+    text-align: center;
+    margin: 35px auto 35px auto;
+    z-index: 9999;
+    display: block;
+    width: 80px !important;
+    height: 80px !important;
+    border: 10px solid rgba(0,0,0,.3);
+    border-radius: 50%;
+    border-top-color: #000;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite
+}
+
+@keyframes spin{
+    to{
+        -webkit-transform: rotate(360deg)
+    }
+}
+
+@-webkit-keyframes spin{
+    to{
+        -webkit-transform: rotate(360deg)
+    }
+}
+
+.modal-backdrop.show {
+     opacity: .75
+}

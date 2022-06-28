@@ -1,0 +1,246 @@
+<div class="row">
+    <div class="card">
+        <div class="card-header" style="text-align:center">CADASTRO DE QUIZ
+        </div>
+        <div class="card-body">
+            <div class="modal-body no-padding">
+                <div class="row">
+                    <div class="col-12">
+                        <form id="form">
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="dificuldade">Dificuldade</label>
+                                    <select class="form-control" id="dificuldade" name="dificuldade">
+                                        <option value="Fácil">Fácil</option>
+                                        <option value="Média">Média</option>
+                                        <option value="Difícil">Difícil</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <h5 for="perguntas">Escolha 20 questões dentre as disponíveis abaixo:</h5>
+                                <?php foreach ($perguntas as $p): ?>
+                                    <div class="col-md-12">
+                                        <input type="checkbox" name="perguntas[]" id="perguntas[<?= $p->getId() ?>]"
+                                               value="<?= $p->getId() ?>">
+                                        <label for="perguntas[<?= $p->getId() ?>]"><?= $p->getDescricao() ?></label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div id="checkDiv" class="float-right">
+                            </div>
+                    </div>
+                </div>
+                <div class="form-row float-right">
+                    <button type="button" class="btn btn-info" id="all" onclick="checkAll()">Selecionar Todos</button>
+                    <button type="button" class="btn btn-danger" id="uncheck" onclick="uncheckAll()">Limpar</button>
+                    <button type="submit" class="btn btn-success float-right">Cadastrar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+        <br>
+        <div class="col">
+            <div class="footer">
+                <div id="message" class="alert alert-danger d-none">teste</div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+
+    var message = document.getElementById('message');
+    var message2 = document.getElementById('message2');
+    var form = document.getElementById('form');
+    let total = 1;
+    let partial = 0;
+    let index = 0;
+
+    function checkAll() {
+        $('input:checkbox').prop('checked', true);
+    }
+
+    function uncheckAll() {
+        $('input:checkbox').prop('checked', false);
+    }
+
+    function openModal(id) {
+        document.getElementById('message2').classList.add('d-none');
+        form.reset();
+        $("#userId").val(id);
+        if (id > 0) {
+            showLoading();
+            $("#file").attr('required', false);
+            fetch(`<?= BASEURL ?>api/usuario/` + id, {
+                method: 'GET',
+                credentials: "same-origin",
+                header: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                response.json().then(json => {
+                    let user = json.message[0];
+                    $("#name").val(user.name);
+                    $("#email").val(user.email);
+                    $("#phone").val(formatPhoneNumber(user.phone));
+                    closeLoading();
+                });
+            });
+        }
+        $("#modal").modal('show');
+    }
+
+    function resetForm() {
+        $("#nameFilter").val('');
+        $("#emailFilter").val('');
+        index = 0;
+        partial = 0;
+        total = 1;
+        $("#userTable tbody").empty();
+        getUsers();
+    }
+
+    function changeMessageType(type, id) {
+        let message = document.getElementById(id);
+        if (type === 'ok') {
+            message.classList.remove('alert-danger');
+            message.classList.remove('d-none');
+            message.classList.add('alert-info');
+        }
+
+        if (type === 'error') {
+            message.classList.remove('alert-info');
+            message.classList.remove('d-none');
+            message.classList.add('alert-danger');
+        }
+    }
+
+    function generateTableBody(json) {
+        let icons = `<i class="fa fa-pencil text-info" title="Editar ${json.name}" onclick="openModal(${json.id})"></i> `;
+        icons += `<i class="fa fa-times text-danger" title="Deletar ${json.name}" onclick="removeUser(${json.id})"></i> `;
+        return `
+            <tr>
+                <td class="text-center">${json.id}</td>
+                <td class="text-center">${json.name}</td>
+                <td class="text-center">${json.dificuldade}</td>
+                <td class="text-center">${icons}</td>
+            </tr>
+        `;
+    }
+
+    function filter() {
+        $("#userTable tbody").empty();
+        index = 0;
+        total = 1;
+        partial = 0;
+        getUsers();
+    }
+
+    function getUsers() {
+        showLoading();
+        let name = $("#nameFilter").val();
+        let email = $("#emailFilter").val();
+        fetch(`<?= BASEURL ?>api/cadastros/aluno/?name=${name}&email=${email}`, {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            response.json().then(json => {
+                closeLoading();
+                total = json.total;
+                partial += json.partial;
+                $("#total").text(total);
+                $("#partial").text(partial);
+                let users = json.message;
+                let usersHtml = users.map(generateTableBody);
+                $("#userTable tbody").append(usersHtml);
+            });
+        });
+    }
+
+    function removeUser(id) {
+        showLoading();
+        fetch(`<?= BASEURL ?>api/usuario/` + id, {
+            method: 'DELETE',
+            credentials: "same-origin",
+            header: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            response.json().then(json => {
+                closeLoading();
+                changeMessageType(json.status, 'message');
+                message.innerText = json.message;
+                if (json.status == 'ok') filter();
+            });
+        });
+    }
+
+    form.addEventListener(`submit`, e => {
+        e.preventDefault();
+        showLoading();
+        let data = formDataToJson('form');
+        fetch(`<?= BASEURL ?>api/cadastros/quiz`, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            response.json().then(json => {
+                changeMessageType(json.status, 'message');
+                message.innerText = json.message;
+                closeLoading();
+                if (json.status == 'ok') {
+                    setTimeout(function () {
+                        window.location.href = "<?= BASEURL ?>cadastros/pergunta/";
+                    }, 2000);
+                }
+            });
+        });
+    });
+
+    //form.addEventListener('submit', e => {
+    //    e.preventDefault();
+    //    showLoading();
+    //    let formData = formDataToJson('userForm');
+    //    let method = 'POST';
+    //    if(formData.userId > 0) method = 'PUT';
+    //    fetch(`<?//= BASEURL ?>//usuario/`, {
+    //        method: 'POST',
+    //        credentials: "same-origin",
+    //        headers: {
+    //            'Accept': 'application/json',
+    //            'Content-Type': 'application/json',
+    //        },
+    //        body: JSON.stringify(formData),
+    //    }).then(response => {
+    //        response.json().then(json => {
+    //            closeLoading();
+    //            changeMessageType(json.status, 'message2');
+    //            message2.innerText = json.message;
+    //            if (json.status === 'ok') {
+    //                $("#modal").modal('hide');
+    //                filter();
+    //            }
+    //        });
+    //    });
+    //});
+
+    $(document).ready(function () {
+        getUsers();
+    });
+
+</script>

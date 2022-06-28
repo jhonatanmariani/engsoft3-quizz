@@ -1,0 +1,24 @@
+{
+  "config": {
+    "platform": {
+      "php" : "7.4"
+    }
+  },
+  "authors": [
+    {
+      "name": "Ismael Bies",
+      "email": "ismaelbies@hotmail.com",
+      "homepage": "http://www.gtihub.com/ismaelbies"
+    }
+  ],
+  "require": {
+    "slim/slim": "^3.1",
+    "slim/php-view": "^2.2",
+    "doctrine/orm": "^2.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "./src"
+    }
+  }
+}

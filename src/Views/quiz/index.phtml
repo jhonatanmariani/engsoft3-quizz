@@ -1,0 +1,172 @@
+<div class="row">
+    <div class="card">
+        <div class="card-header" style="text-align:center">QUIZ
+        </div>
+
+        <div class="card-body">
+            <h5>Quizz Disponíveis para Jogar</h5>
+            <br>
+            <div class="modal-body no-padding">
+                Exibindo <span id="partial"></span> de <span id="total"></span>
+                <div class="row">
+                    <div class="col-12">
+                        <table id="userTable" class="table table-striped table-bordered">
+                            <thead>
+                            <th class="text-center">Nome</th>
+                            <th class="text-center">Dificuldade</th>
+<!--                            <th class="text-center">Professor</th>-->
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Ações</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <div class="footer">
+                            <div id="message" class="alert alert-danger d-none">teste</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var message = document.getElementById('message');
+    var message2 = document.getElementById('message2');
+    var form = document.getElementById('userForm');
+    let total = 1;
+    let partial = 0;
+    let index = 0;
+
+    function openModal(id) {
+        document.getElementById('message2').classList.add('d-none');
+        form.reset();
+        $("#userId").val(id);
+        if (id > 0) {
+            showLoading();
+            $("#file").attr('required', false);
+            fetch(`<?= BASEURL ?>api/usuario/` + id, {
+                method: 'GET',
+                credentials: "same-origin",
+                header: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                response.json().then(json => {
+                    let user = json.message[0];
+                    $("#name").val(user.name);
+                    $("#email").val(user.email);
+                    //$("#phone").val(formatPhoneNumber(user.phone));
+                    closeLoading();
+                });
+            });
+        }
+        $("#modal").modal('show');
+    }
+
+    function resetForm() {
+        $("#nameFilter").val('');
+        $("#emailFilter").val('');
+        index = 0;
+        partial = 0;
+        total = 1;
+        $("#userTable tbody").empty();
+        getUsers();
+    }
+
+    function changeMessageType(type, id) {
+        let message = document.getElementById(id);
+        if (type === 'ok') {
+            message.classList.remove('alert-danger');
+            message.classList.remove('d-none');
+            message.classList.add('alert-info');
+        }
+
+        if (type === 'error') {
+            message.classList.remove('alert-info');
+            message.classList.remove('d-none');
+            message.classList.add('alert-danger');
+        }
+    }
+
+    function generateTableBody(json) {
+        let icons = `<a class="fa fa-play" title="Jogar ${json.name}" href="<?= BASEURL ?>quiz/jogar/${json.id}/0"></a> `;
+        return `
+            <tr>
+                <td class="text-center">${json.name}</td>
+                <td class="text-center">${json.dificuldade}</td>
+                <td class="text-center">Mostrar Status</td>
+                <td class="text-center">${icons}</td>
+            </tr>
+        `;
+    }
+
+    function filter() {
+        $("#userTable tbody").empty();
+        index = 0;
+        total = 1;
+        partial = 0;
+        getUsers();
+    }
+
+    /*function formatPhoneNumber(phoneNumberString) {
+        var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+        var match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+        if (match) {
+            return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+        }
+        return '';
+    }*/
+
+    function getQuiz() {
+        showLoading();
+        fetch(`<?= BASEURL ?>api/quiz/`, {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            response.json().then(json => {
+                closeLoading();
+                total = json.total;
+                partial += json.total;
+                $("#total").text(total);
+                $("#partial").text(total);
+                let users = json.message;
+                let usersHtml = users.map(generateTableBody);
+                $("#userTable tbody").append(usersHtml);
+            });
+        });
+    }
+
+    function removeUser(id) {
+        showLoading();
+        fetch(`<?= BASEURL ?>api/usuario/` + id, {
+            method: 'DELETE',
+            credentials: "same-origin",
+            header: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            response.json().then(json => {
+                closeLoading();
+                changeMessageType(json.status, 'message2');
+                message.innerText = json.message;
+                if (json.status == 'ok') filter();
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        getQuiz();
+    });
+
+</script>

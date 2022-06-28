@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>LogiQuizz v1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1, shrink-to-fit=no">
+    <link rel="stylesheet" href="<?= BASEURL ?>assets/css/bootstrap.min.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= BASEURL ?>assets/css/login.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= BASEURL ?>assets/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="icon" href="<?= BASEURL ?>assets/img/logo.png">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+</head>
+
+<body>
+    <br>
+    <h1 style="text-align:center">LogiQuizz</h1>
+<div class="container">
+    <div class="card card-login mx-auto mt-5">
+        <div id="header" class="text-center pt-2">
+<!--            <img src="--><?//= BASEURL ?><!--assets/img/logo.png" class="logo">-->
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <?php if (\App\Helpers\Session::get('errorMsg')): ?>
+                    <div class="alert alert-danger"><?= \App\Helpers\Session::get('errorMsg')?></div>
+                    <?php \App\Helpers\Session::forgot('errorMsg'); ?>
+                <?php endif; ?>
+                <div class="row">
+                    <div class="col mb-3">
+                        <fieldset>
+                            <legend><label for="login">Login</label></legend>
+                            <input type="text" name="login" required id="login" class="w-100 text-center"
+                                   placeholder="Informe o e-mail">
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col mb-1">
+                        <fieldset>
+                            <legend><label for="password">Senha</label></legend>
+                            <input type="password" name="password" required id="password" class="w-100 text-center"
+                                   placeholder="Informe a senha">
+                        </fieldset>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" type="submit">ENTRAR</button>
+                <a class="btn btn-outline-info btn-block" href="<?= BASEURL ?>cadastros/novo-usuario">CADASTRAR-SE</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

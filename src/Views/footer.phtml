@@ -1,0 +1,48 @@
+<div class="modal fade" id="showLoading" tabindex="-1" role="dialog" aria-labelledby="showLoading">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="loader"></div>
+                <div class="loader-txt">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container-fluid">
+
+    </div>
+</footer>
+
+
+</div>
+</div>
+<script src="<?= BASEURL ?>assets/js/jquery.mask.min.js"></script>
+<script src="<?= BASEURL ?>assets/js/core/popper.min.js"></script>
+<script src="<?= BASEURL ?>assets/js/core/bootstrap.min.js"></script>
+<script src="<?= BASEURL ?>assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<script src="<?= BASEURL ?>assets/js/plugins/chartjs.min.js"></script>
+<script src="<?= BASEURL ?>assets/js/now-ui-dashboard.min.js"></script>
+<script defer src="<?= BASEURL ?>assets/js/jquery.dataTables.min.js"></script>
+<script defer src="<?= BASEURL ?>assets/js/dataTables.bootstrap4.min.js"></script>
+<script src="<?= BASEURL ?>assets/js/functions.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#dataTable").DataTable({
+            "order": [],
+            "ordering": false
+        });
+
+        $("#cadastro").click(function (){
+            $("#menuDropDown").toggle(500);
+        });
+    });
+
+
+
+</script>
+</body>
+</html>
